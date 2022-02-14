@@ -6,24 +6,37 @@ using Random = UnityEngine.Random;
 public class SpawnManager : MonoBehaviour
 {
     public GameObject EnemyPrefab;
-    private Vector3 spawnPos = new Vector3(10, 0, 0);
-    public float startDelay = 2f;
+    public GameObject powerUpPrefab;
+   // private Vector3 spawnPos = new Vector3(10, 0, 0);
+   /* public float startDelay = 2f;
     public float repeatRate = 15f;
-    public float timeDestroy = 20f;
+    public float timeDestroy = 20f;*/
 
     private float spawnPositionRange = 9f;
+
+    private int enemiesPerWave = 1;
+    private int enemiesLeft;
 
     void Start()
     {
         //  InvokeRepeating("SpawnObject", startDelay, repeatRate);
         //Instantiate(EnemyPrefab, spawnPos, EnemyPrefab.transform.rotation)
-        SpawnEnemyWave(3);
-    }
-
-    void Update()
-    {
+        SpawnEnemyWave(enemiesPerWave);
+        Instantiate(powerUpPrefab, RandomSpawnPosition(), powerUpPrefab.transform.rotation);
        
     }
+
+    private void Update()
+    {
+        enemiesLeft = FindObjectsOfType<Enemy>().Length;
+        if (enemiesLeft <= 0)
+        {
+            enemiesPerWave++;
+            Debug.Log("a");
+            SpawnEnemyWave(enemiesPerWave);
+            Instantiate(powerUpPrefab, RandomSpawnPosition(), powerUpPrefab.transform.rotation);
+        }
+    } 
 
     public void SpawnObject()
     {
@@ -47,7 +60,7 @@ public class SpawnManager : MonoBehaviour
     private void SpawnEnemyWave(int totalEnemies)
     {
         for (int i = 0; i < totalEnemies; i++)
-        {
+        { 
             SpawnEnemy();
         }
     }
